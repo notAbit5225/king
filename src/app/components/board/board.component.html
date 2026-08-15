@@ -1,0 +1,96 @@
+<div class="board-container">
+  
+  @if (!gameService.isGameComplete()) {
+    <header class="top-bar">
+      <h2>King Scoreboard</h2>
+      <button class="reset-btn" (click)="startNewGame()">New Game</button>
+    </header>
+
+    <div class="board-layout">
+      <!-- Left Panel: Score Matrix -->
+      <section class="card matrix-card">
+        <h3>Live Leaderboard</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Total Points</th>
+                <th>Used Contracts</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (player of gameService.players(); track player.id) {
+                <tr [class.leading]="gameService.leaderboard()[0]?.id === player.id">
+                  <td class="player-cell">
+                    <span class="player-name">{{ player.name }}</span>
+                  </td>
+                  <td class="score-cell" [class.negative]="player.totalScore < 0" [class.positive]="player.totalScore > 0">
+                    {{ player.totalScore }} pts
+                  </td>
+                  <td class="status-cell">
+                    <span class="badge">Positives: {{ player.usedPositiveContractsCount }}/{{ gameService.maxPositivesPerPlayer() }}</span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Right Panel: Record Hand Form -->
+      <section class="card entry-card">
+        <h3>Record Hand</h3>
+        
+        <div class="form-group">
+          <label>Declarer</label>
+          <select [(ngModel)]="selectedDeclarerId" (change)="onDeclarerChange()">
+            @for (player of gameService.players(); track player.id) {
+              <option [value]="player.id">{{ player.name }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Contract</label>
+          <select [(ngModel)]="selectedContract">
+            @for (opt of availableContracts(); track opt.key) {
+              <option [value]="opt.key">{{ opt.label }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="inputs-grid">
+          <h4>Tricks / Cards Taken</h4>
+          @for (player of gameService.players(); track player.id) {
+            <div class="player-input">
+              <label>{{ player.name }}</label>
+              <input type="number" min="0" [(ngModel)]="playerInputs[player.id]" />
+            </div>
+          }
+        </div>
+
+        <div class="validation-bar" [class.valid]="isInputValid()">
+          @if (isInputValid()) {
+            <span>✓ Valid count distribution</span>
+          } @else {
+            <span>⚠️ Total count does not match contract requirement</span>
+          }
+        </div>
+
+        <button class="submit-btn" [disabled]="!isInputValid()" (click)="onSubmitRound()">
+          Add Round Score
+        </button>
+      </section>
+    </div>
+  } @else {
+    <div class="winner-card card">
+      <h1>🎉 Game Finished!</h1>
+      <h2>Winner: {{ gameService.leaderboard()[0]?.name }}</h2>
+      <p class="final-score">Final Score: {{ gameService.leaderboard()[0]?.totalScore }} pts</p>
+
+      <button class="submit-btn" (click)="startNewGame()">Start New Match</button>
+    </div>
+  }
+
+</div>

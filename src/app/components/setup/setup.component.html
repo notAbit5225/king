@@ -1,0 +1,42 @@
+<div class="setup-container">
+  <div class="setup-card">
+    <header class="card-header">
+      <h2>King Game Setup</h2>
+      <p class="subtitle">Enter player names in seating order</p>
+    </header>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="p1">Player 1</label>
+        <input id="p1" type="text" [(ngModel)]="player1" placeholder="Enter name" autocomplete="off" />
+      </div>
+
+      <div class="form-group">
+        <label for="p2">Player 2</label>
+        <input id="p2" type="text" [(ngModel)]="player2" placeholder="Enter name" autocomplete="off" />
+      </div>
+
+      <div class="form-group">
+        <label for="p3">Player 3</label>
+        <input id="p3" type="text" [(ngModel)]="player3" placeholder="Enter name" autocomplete="off" />
+      </div>
+
+      <div class="form-group">
+        <label for="p4">Player 4</label>
+        <input id="p4" type="text" [(ngModel)]="player4" placeholder="Enter name" autocomplete="off" />
+      </div>
+
+      <div class="form-group">
+        <label for="trumpCount">Positive (Trump) Rounds per Player</label>
+        <select id="trumpCount" [(ngModel)]="maxPositives">
+          <option [value]="1">1 Trump Round</option>
+          <option [value]="2">2 Trump Rounds</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="start-btn" (click)="onStartGame()">
+      Start Game
+    </button>
+  </div>
+</div>
