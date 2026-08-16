@@ -60,19 +60,31 @@
           </select>
         </div>
 
-        <div class="inputs-grid">
-          <h4>Tricks / Cards Taken</h4>
-          @for (player of gameService.players(); track player.id) {
-            <div class="player-input">
-              <label>{{ player.name }}</label>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <button type="button" (click)="decrement(player.id)" style="width: 40px; height: 40px; font-size: 20px; font-weight: bold; cursor: pointer;">-</button>
-                <input type="number" min="0" [(ngModel)]="playerInputs[player.id]" style="text-align: center; flex: 1;" />
-                <button type="button" (click)="increment(player.id)" style="width: 40px; height: 40px; font-size: 20px; font-weight: bold; cursor: pointer;">+</button>
-              </div>
-            </div>
-          }
-        </div>
+    <div class="inputs-grid">
+  <h4>Tricks / Cards Taken</h4>
+  @for (player of gameService.players(); track player.id) {
+    <div class="player-input" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+      <label style="margin: 0; font-size: 16px; font-weight: 600; flex: 1;">{{ player.name }}</label>
+
+      <!-- Circular Unfilled Stepper Controls -->
+      <div style="display: flex; align-items: center; gap: 12px; min-width: 140px; justify-content: flex-end;">
+        <button type="button" (click)="decrement(player.id)" [disabled]="(playerInputs[player.id] || 0) <= 0" 
+          style="width: 38px; height: 38px; border-radius: 50%; border: 2px solid #007bff; background: transparent; color: #007bff; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; padding: 0; touch-action: manipulation; cursor: pointer;">
+          -
+        </button>
+        
+        <span style="font-size: 22px; font-weight: bold; min-width: 32px; text-align: center; display: inline-block;">
+          {{ playerInputs[player.id] || 0 }}
+        </span>
+
+        <button type="button" (click)="increment(player.id)" 
+          style="width: 38px; height: 38px; border-radius: 50%; border: 2px solid #007bff; background: transparent; color: #007bff; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; padding: 0; touch-action: manipulation; cursor: pointer;">
+          +
+        </button>
+      </div>
+    </div>
+  }
+</div>
 
         <div class="validation-bar" [class.valid]="isInputValid()">
           @if (isInputValid()) {
