@@ -39,19 +39,14 @@ export class BoardComponent {
     const maxPositives = this.gameService.maxPositivesPerPlayer();
     const list: { key: ContractType; label: string }[] = [];
 
-    // Check 6 negative contracts
     const negs = declarer.usedNegativeContracts;
     (Object.keys(negs) as NegativeContract[]).forEach(key => {
       const timesPlayedGlobally = globalCounts[key] || 0;
-      
-      // Rule 1: Declarer hasn't played it
-      // Rule 2: Played less than 4 times globally
       if (!negs[key] && timesPlayedGlobally < 4) {
         list.push({ key, label: this.contractLabels[key] });
       }
     });
 
-    // Check positive trumps
     const trumpsGlobally = globalCounts['trump'] || 0;
     if (declarer.usedPositiveContractsCount < maxPositives && trumpsGlobally < (maxPositives * 4)) {
       list.push({ key: 'trump', label: this.contractLabels['trump'] });
@@ -64,6 +59,18 @@ export class BoardComponent {
     const avail = this.availableContracts();
     if (avail.length > 0) {
       this.selectedContract = avail[0].key;
+    }
+  }
+
+  increment(playerId: number) {
+    const current = Number(this.playerInputs[playerId]) || 0;
+    this.playerInputs[playerId] = current + 1;
+  }
+
+  decrement(playerId: number) {
+    const current = Number(this.playerInputs[playerId]) || 0;
+    if (current > 0) {
+      this.playerInputs[playerId] = current - 1;
     }
   }
 
