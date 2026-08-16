@@ -60,16 +60,16 @@
           </select>
         </div>
 
-    <div class="inputs-grid">
+  <div class="inputs-grid">
   <h4>Tricks / Cards Taken</h4>
   @for (player of gameService.players(); track player.id) {
-    <div class="player-input" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; width: 100%;">
-      <label style="margin: 0; font-size: 15px; font-weight: 600; flex: 1; min-width: 0; padding-right: 6px;">{{ player.name }}</label>
+    <div class="player-input" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; width: 100%; box-sizing: border-box;">
+      <label style="margin: 0; font-size: 16px; font-weight: 600; flex: 1;">{{ player.name }}</label>
 
-      <!-- Scaled Stepper Controls -->
-      <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+      <!-- Stepper Controls -->
+      <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0;">
         <button type="button" (click)="decrement(player.id)" [disabled]="(playerInputs[player.id] || 0) <= 0" 
-          style="width: 34px; height: 34px; border-radius: 50%; border: 2px solid #007bff; background: transparent; color: #007bff; font-size: 18px; font-weight: bold; display: flex; align-items: center; justify-content: center; padding: 0; touch-action: manipulation; cursor: pointer;">
+          style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid #007bff; background: transparent; color: #007bff; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; padding: 0; touch-action: manipulation; cursor: pointer;">
           -
         </button>
         
@@ -78,13 +78,15 @@
         </span>
 
         <button type="button" (click)="increment(player.id)" 
-          style="width: 34px; height: 34px; border-radius: 50%; border: 2px solid #007bff; background: transparent; color: #007bff; font-size: 18px; font-weight: bold; display: flex; align-items: center; justify-content: center; padding: 0; touch-action: manipulation; cursor: pointer;">
+          style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid #007bff; background: transparent; color: #007bff; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; padding: 0; touch-action: manipulation; cursor: pointer;">
           +
         </button>
       </div>
     </div>
   }
 </div>
+
+
 
         <div class="validation-bar" [class.valid]="isInputValid()">
           @if (isInputValid()) {

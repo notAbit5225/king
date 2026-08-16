@@ -201,3 +201,21 @@ html, body, .board-container {
     overflow-x: auto;
   }
 }
+
+
+/* Force 1 column layout for player controls on mobile */
+@media (max-width: 600px) {
+  .inputs-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .player-input {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
