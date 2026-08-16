@@ -155,14 +155,49 @@ select, input {
   margin: 5rem auto;
   text-align: center;
 }
-/* Prevent horizontal scroll on mobile */
-.board-container {
-  max-width: 100vw;
+/* Ensure everything fits vertically on mobile viewports without clipping */
+html, body, .board-container {
+  max-width: 100%;
   overflow-x: hidden;
   box-sizing: border-box;
 }
 
-.inputs-grid, .player-input {
-  max-width: 100%;
+*, *::before, *::after {
   box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .board-container {
+    padding: 8px;
+    width: 100%;
+  }
+
+  .board-layout {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .card, .entry-card, .matrix-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 12px;
+  }
+
+  .player-input {
+    gap: 8px;
+    width: 100%;
+  }
+
+  .player-input label {
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+  }
 }
