@@ -5,6 +5,12 @@
       <p class="subtitle">Enter player names in seating order</p>
     </header>
 
+    @if (hasSavedGame) {
+      <button (click)="onResumeGame()" style="width: 100%; padding: 12px; font-size: 16px; font-weight: bold; background-color: #28a745; color: white; border: none; border-radius: 8px; margin-bottom: 16px; cursor: pointer;">
+        ▶ Resume Unfinished Match
+      </button>
+    }
+
     <div class="form-grid">
       <div class="form-group">
         <label for="p1">Player 1</label>

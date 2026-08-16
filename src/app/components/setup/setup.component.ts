@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { GameService } from '../../services/game.service';
   templateUrl: './setup.component.html',
   styleUrl: './setup.component.css'
 })
-export class SetupComponent {
+export class SetupComponent implements OnInit {
   private gameService = inject(GameService);
   private router = inject(Router);
 
@@ -20,6 +20,19 @@ export class SetupComponent {
   player3 = '';
   player4 = '';
   maxPositives = 2;
+  hasSavedGame = false;
+
+  ngOnInit() {
+    // Check if a saved match exists in local storage
+    const saved = localStorage.getItem('king_players');
+    if (saved && JSON.parse(saved).length > 0) {
+      this.hasSavedGame = true;
+    }
+  }
+
+  onResumeGame() {
+    this.router.navigate(['/board']);
+  }
 
   onStartGame() {
     const names = [this.player1, this.player2, this.player3, this.player4];
