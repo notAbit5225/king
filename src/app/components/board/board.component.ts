@@ -1,4 +1,4 @@
-import { Component, inject, computed } from '@angular/core';
+import { Component, inject, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -12,7 +12,7 @@ import { ContractType, NegativeContract } from '../../models/king.model';
   templateUrl: './board.component.html',
   styleUrl: './board.component.css'
 })
-export class BoardComponent {
+export class BoardComponent implements OnInit {
   gameService = inject(GameService);
   private router = inject(Router);
 
@@ -30,6 +30,12 @@ export class BoardComponent {
     noLastTwo: 'No Last Two (-90/trick)',
     trump: 'Trump / Positives (+25/trick)'
   };
+
+  ngOnInit() {
+    // Restore exact turn state from gameService
+    this.selectedDeclarerId = this.gameService.currentDeclarerId();
+    this.onDeclarerChange();
+  }
 
   availableContracts = computed(() => {
     const declarer = this.gameService.players().find(p => p.id === Number(this.selectedDeclarerId));
@@ -56,6 +62,7 @@ export class BoardComponent {
   });
 
   onDeclarerChange() {
+    this.gameService.setDeclarerId(Number(this.selectedDeclarerId));
     const avail = this.availableContracts();
     if (avail.length > 0) {
       this.selectedContract = avail[0].key;
@@ -117,8 +124,8 @@ export class BoardComponent {
 
     this.playerInputs = { 1: 0, 2: 0, 3: 0, 4: 0 };
     
-    const nextId = (Number(this.selectedDeclarerId) % 4) + 1;
-    this.selectedDeclarerId = nextId;
+    // Sync UI with updated declarer state from service
+    this.selectedDeclarerId = this.gameService.currentDeclarerId();
     this.onDeclarerChange();
   }
 
