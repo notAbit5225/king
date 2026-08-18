@@ -1,17 +1,32 @@
 <div class="setup-container">
   <div class="setup-card">
-    <header class="card-header">
-      <h2>King Game Setup</h2>
-      <p class="subtitle">Enter player names in seating order</p>
+    <header class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h2>King Game Setup</h2>
+        <p class="subtitle">Enter player names in seating order</p>
+      </div>
+
+      <button (click)="gameService.toggleTheme()" style="background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 6px 12px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-weight: 600;">
+        {{ gameService.theme() === 'dark' ? '☀️ Light' : '🌙 Dark' }}
+      </button>
     </header>
 
-    @if (hasSavedGame) {
-      <button (click)="onResumeGame()" style="width: 100%; padding: 12px; font-size: 16px; font-weight: bold; background-color: #28a745; color: white; border: none; border-radius: 8px; margin-bottom: 16px; cursor: pointer;">
+   @if (hasSavedGame) {
+      <button (click)="onResumeGame()" style="width: 100%; padding: 8px 12px; font-size: 14px; font-weight: bold; background-color: #28a745; color: white; border: none; border-radius: 8px; margin-bottom: 12px; cursor: pointer;">
         ▶ Resume Unfinished Match
       </button>
     }
 
     <div class="form-grid">
+
+      <div class="form-group">
+        <label for="playerCount">Game Mode</label>
+        <select id="playerCount" [(ngModel)]="playerCount">
+          <option [ngValue]="4">4 Players (Standard)</option>
+          <option [ngValue]="3">3 Players</option>
+        </select>
+      </div>
+
       <div class="form-group">
         <label for="p1">Player 1</label>
         <input id="p1" type="text" [(ngModel)]="player1" placeholder="Enter name" autocomplete="off" />
@@ -27,10 +42,12 @@
         <input id="p3" type="text" [(ngModel)]="player3" placeholder="Enter name" autocomplete="off" />
       </div>
 
-      <div class="form-group">
-        <label for="p4">Player 4</label>
-        <input id="p4" type="text" [(ngModel)]="player4" placeholder="Enter name" autocomplete="off" />
-      </div>
+      @if (playerCount === 4) {
+        <div class="form-group">
+          <label for="p4">Player 4</label>
+          <input id="p4" type="text" [(ngModel)]="player4" placeholder="Enter name" autocomplete="off" />
+        </div>
+      }
 
       <div class="form-group">
         <label for="trumpCount">Positive (Trump) Rounds per Player</label>

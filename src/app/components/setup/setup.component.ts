@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { GameService } from '../../services/game.service';
+import { PlayerCount } from '../../models/king.model';
 
 @Component({
   selector: 'app-setup',
@@ -12,13 +13,14 @@ import { GameService } from '../../services/game.service';
   styleUrl: './setup.component.css'
 })
 export class SetupComponent implements OnInit {
-  private gameService = inject(GameService);
+  public gameService = inject(GameService);
   private router = inject(Router);
 
   player1 = '';
   player2 = '';
   player3 = '';
   player4 = '';
+  playerCount: PlayerCount = 4;
   maxPositives = 2;
   hasSavedGame = false;
 
@@ -33,10 +35,12 @@ export class SetupComponent implements OnInit {
   onResumeGame() {
     this.router.navigate(['/board']);
   }
+onStartGame() {
+    const names = this.playerCount === 3 
+      ? [this.player1, this.player2, this.player3] 
+      : [this.player1, this.player2, this.player3, this.player4];
 
-  onStartGame() {
-    const names = [this.player1, this.player2, this.player3, this.player4];
-    this.gameService.initGame(names, Number(this.maxPositives));
+    this.gameService.initGame(names, Number(this.maxPositives), this.playerCount);
     this.router.navigate(['/board']);
   }
 }

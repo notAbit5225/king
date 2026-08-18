@@ -12,3 +12,41 @@ html, body {
 *, *::before, *::after {
   box-sizing: border-box;
 }
+
+
+:root {
+  /* 🌙 Dark Theme Default */
+  --bg-color: #0f172a;
+  --card-bg: #1e293b;
+  --input-bg: #0f172a;
+  --accent-primary: #6366f1;
+  --accent-hover: #4f46e5;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --border-color: #334155;
+  --body-bg: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%);
+}
+
+/* 🌊 Light Teal Gradient Theme */
+html.light-mode {
+  --bg-color: #f0fdfa;
+  /* Card uses a subtle soft teal gradient */
+  --card-bg: linear-gradient(145deg, #ffffff 0%, #f0fdfa 100%);
+  --input-bg: #ccfbf1;
+  --accent-primary: #0d9488;
+  --accent-hover: #0f766e;
+  --text-main: #042f2e;
+  --text-muted: #115e59;
+  --border-color: #99f6e4;
+
+  --body-bg: radial-gradient(circle at top, #f0fdfa 0%, #e6fffa 50%, #99f6e4 100%);
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--body-bg) !important;
+  background-attachment: fixed !important;
+  color: var(--text-main);
+  transition: background 0.3s ease, color 0.3s ease;
+}

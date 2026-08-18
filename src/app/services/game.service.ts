@@ -1,18 +1,50 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { Player, RoundEntry, NegativeContract, ContractType } from '../models/king.model';
+import { Player, RoundEntry, NegativeContract, ContractType, PlayerCount } from '../models/king.model';
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
+  theme = signal<'dark' | 'light'>('dark');
   players = signal<Player[]>([]);
+  playerCount = signal<PlayerCount>(4);
+
+  getContractValue(contract: ContractType): number {
+    const is3P = this.playerCount() === 3;
+    switch (contract) {
+      case 'noTricks': return is3P ? -15 : -20;
+      case 'noHearts': return is3P ? -15 : -20;
+      case 'noBoys': return -30;
+      case 'noQueens': return -50;
+      case 'noKingOfHearts': return -160;
+      case 'noLastTwo': return -90;
+      case 'trump': return is3P ? 20 : 25;
+      default: return 0;
+    }
+  }
+
+
   rounds = signal<RoundEntry[]>([]);
   maxPositivesPerPlayer = signal<number>(2);
   currentDeclarerId = signal<number>(1);
 
   constructor() {
-    const savedPlayers = localStorage.getItem('king_players');
+    const savedTheme = localStorage.getItem('king_theme') as 'dark' | 'light';
+    if (savedTheme) {
+      this.theme.set(savedTheme);
+      this.applyTheme(savedTheme);
+    } else {
+      this.applyTheme('dark');
+    }
+
+
+
+
+  const savedPlayers = localStorage.getItem('king_players');
     const savedRounds = localStorage.getItem('king_rounds');
     const savedMaxPos = localStorage.getItem('king_max_positives');
     const savedDeclarer = localStorage.getItem('king_declarer_id');
+    const savedPlayerCount = localStorage.getItem('king_player_count');
+
+    if (savedPlayerCount) this.playerCount.set(JSON.parse(savedPlayerCount) as PlayerCount);
 
     if (savedPlayers) this.players.set(JSON.parse(savedPlayers));
     if (savedRounds) {
@@ -21,11 +53,17 @@ export class GameService {
       
       // Auto-calculate who should deal next if saved declarer isn't set
       if (!savedDeclarer && roundsData.length > 0) {
-        this.currentDeclarerId.set((roundsData.length % 4) + 1);
+        if (!savedDeclarer && roundsData.length > 0) {
+      this.currentDeclarerId.set((roundsData.length % this.playerCount()) + 1);
+    }
       }
     }
     if (savedMaxPos) this.maxPositivesPerPlayer.set(JSON.parse(savedMaxPos));
     if (savedDeclarer) this.currentDeclarerId.set(JSON.parse(savedDeclarer));
+
+
+
+
   }
 
   globalContractCounts = computed(() => {
@@ -53,10 +91,11 @@ export class GameService {
     return [...this.players()].sort((a, b) => b.totalScore - a.totalScore);
   });
 
-  initGame(playerNames: string[], maxPositives: number = 2) {
+initGame(playerNames: string[], maxPositives: number = 2, count: PlayerCount = 4) {
+    this.playerCount.set(count);
     this.maxPositivesPerPlayer.set(maxPositives);
 
-    const initialPlayers: Player[] = playerNames.map((name, index) => ({
+    const initialPlayers: Player[] = playerNames.slice(0, count).map((name, index) => ({
       id: index + 1,
       name: name.trim() || `Player ${index + 1}`,
       totalScore: 0,
@@ -114,8 +153,10 @@ export class GameService {
     ]);
 
     // Pass turn to next player in clockwork rotation
-    const nextDeclarerId = (declarerId % 4) + 1;
+    const total = this.playerCount();
+    const nextDeclarerId = (declarerId % total) + 1;
     this.currentDeclarerId.set(nextDeclarerId);
+  
 
     this.saveState();
   }
@@ -130,13 +171,32 @@ export class GameService {
     localStorage.setItem('king_rounds', JSON.stringify(this.rounds()));
     localStorage.setItem('king_max_positives', JSON.stringify(this.maxPositivesPerPlayer()));
     localStorage.setItem('king_declarer_id', JSON.stringify(this.currentDeclarerId()));
+    localStorage.setItem('king_player_count', JSON.stringify(this.playerCount()));
   }
+
+
+toggleTheme() {
+    const nextTheme = this.theme() === 'dark' ? 'light' : 'dark';
+    this.theme.set(nextTheme);
+    localStorage.setItem('king_theme', nextTheme);
+    this.applyTheme(nextTheme);
+  }
+
+  private applyTheme(theme: 'dark' | 'light') {
+    if (theme === 'light') {
+      document.documentElement.classList.add('light-mode');
+    } else {
+      document.documentElement.classList.remove('light-mode');
+    }
+  }
+
 
   resetGame() {
     localStorage.removeItem('king_players');
     localStorage.removeItem('king_rounds');
     localStorage.removeItem('king_max_positives');
     localStorage.removeItem('king_declarer_id');
+    localStorage.removeItem('king_player_count');
     this.players.set([]);
     this.rounds.set([]);
     this.currentDeclarerId.set(1);

@@ -1,3 +1,11 @@
+
+export type PlayerCount = 3 | 4;
+
+export interface GameSetup {
+  playerCount: PlayerCount;
+  playerNames: string[];
+}
+
 export type NegativeContract = 
   | 'noTricks' 
   | 'noHearts' 

@@ -15,7 +15,7 @@ import { ContractType, NegativeContract } from '../../models/king.model';
 export class BoardComponent implements OnInit {
   gameService = inject(GameService);
   private router = inject(Router);
-
+  
   selectedDeclarerId: number = 1;
   selectedContract: ContractType = 'noTricks';
   
@@ -31,6 +31,27 @@ export class BoardComponent implements OnInit {
     trump: 'Trump / Positives (+25/trick)'
   };
 
+  showResetModal = false;
+
+  // 🎯 Dynamic target trick count (16 for 3 players with 48 cards, 13 for 4 players)
+  get targetTricks(): number {
+    return this.gameService.players().length === 3 ? 16 : 13;
+  }
+
+  openResetModal() {
+    this.showResetModal = true;
+  }
+
+  cancelReset() {
+    this.showResetModal = false;
+  }
+
+  confirmNewGame() {
+    this.showResetModal = false;
+    this.gameService.resetGame();
+    this.router.navigate(['/setup']);
+  }
+
   ngOnInit() {
     // Restore exact turn state from gameService
     this.selectedDeclarerId = this.gameService.currentDeclarerId();
@@ -43,18 +64,19 @@ export class BoardComponent implements OnInit {
 
     const globalCounts = this.gameService.globalContractCounts();
     const maxPositives = this.gameService.maxPositivesPerPlayer();
+    const maxNegatives = this.gameService.players().length; // Adjusts global limit based on player count
     const list: { key: ContractType; label: string }[] = [];
 
     const negs = declarer.usedNegativeContracts;
     (Object.keys(negs) as NegativeContract[]).forEach(key => {
       const timesPlayedGlobally = globalCounts[key] || 0;
-      if (!negs[key] && timesPlayedGlobally < 4) {
+      if (!negs[key] && timesPlayedGlobally < maxNegatives) {
         list.push({ key, label: this.contractLabels[key] });
       }
     });
 
     const trumpsGlobally = globalCounts['trump'] || 0;
-    if (declarer.usedPositiveContractsCount < maxPositives && trumpsGlobally < (maxPositives * 4)) {
+    if (declarer.usedPositiveContractsCount < maxPositives && trumpsGlobally < (maxPositives * maxNegatives)) {
       list.push({ key: 'trump', label: this.contractLabels['trump'] });
     }
 
@@ -102,17 +124,18 @@ export class BoardComponent implements OnInit {
   }
 
   isInputValid(): boolean {
-    const inputs = Object.values(this.playerInputs).map(v => Number(v) || 0);
+    const activePlayerIds = this.gameService.players().map(p => p.id);
+    const inputs = activePlayerIds.map(id => Number(this.playerInputs[id]) || 0);
     const sum = inputs.reduce((a, b) => a + b, 0);
 
     switch (this.selectedContract) {
-      case 'noTricks': return sum === 13;
-      case 'noHearts': return sum === 13;
-      case 'noBoys': return sum === 8;
-      case 'noQueens': return sum === 4;
-      case 'noKingOfHearts': return sum === 1;
-      case 'noLastTwo': return sum === 2;
-      case 'trump': return sum === 13;
+      case 'noTricks': return sum === this.targetTricks; // 🎯 Uses 16 for 3 players, 13 for 4
+      case 'noHearts': return sum === 13;               // 13 Hearts in deck
+      case 'noBoys': return sum === 8;                 // 8 Jacks + Kings
+      case 'noQueens': return sum === 4;               // 4 Queens
+      case 'noKingOfHearts': return sum === 1;         // 1 King of Hearts
+      case 'noLastTwo': return sum === 2;              // 2 Last tricks
+      case 'trump': return sum === this.targetTricks;    // 🎯 Uses 16 for 3 players, 13 for 4
     }
   }
 
@@ -132,6 +155,10 @@ export class BoardComponent implements OnInit {
   getDeclarerName(id: number): string {
     return this.gameService.players().find(p => p.id === id)?.name || '';
   }
+
+  trackByPlayerId(index: number, player: any) {
+  return player.id;
+}
 
   startNewGame() {
     this.gameService.resetGame();

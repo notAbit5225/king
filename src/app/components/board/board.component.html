@@ -3,7 +3,10 @@
   @if (!gameService.isGameComplete()) {
     <header class="top-bar">
       <h2>King Scoreboard</h2>
-      <button class="reset-btn" (click)="startNewGame()">New Game</button>
+      <button class="reset-btn" (click)="openResetModal()">New Game</button>
+        <button (click)="gameService.toggleTheme()" class="theme-toggle-btn">
+  {{ gameService.theme() === 'dark' ? '☀️ Light' : '🌙 Dark' }}
+</button>
     </header>
 
     <div class="board-layout">
@@ -19,21 +22,21 @@
                 <th>Used Contracts</th>
               </tr>
             </thead>
-            <tbody>
-              @for (player of gameService.players(); track player.id) {
-                <tr [class.leading]="gameService.leaderboard()[0]?.id === player.id">
-                  <td class="player-cell">
-                    <span class="player-name">{{ player.name }}</span>
-                  </td>
-                  <td class="score-cell" [class.negative]="player.totalScore < 0" [class.positive]="player.totalScore > 0">
-                    {{ player.totalScore }} pts
-                  </td>
-                  <td class="status-cell">
-                    <span class="badge">Positives: {{ player.usedPositiveContractsCount }}/{{ gameService.maxPositivesPerPlayer() }}</span>
-                  </td>
-                </tr>
-              }
-            </tbody>
+         <tbody>
+  @for (player of gameService.leaderboard(); track player.id) {
+    <tr class="leaderboard-row" [class.leading]="gameService.leaderboard()[0]?.id === player.id">
+      <td class="player-cell">
+        <span class="player-name">{{ player.name }}</span>
+      </td>
+      <td class="score-cell" [class.negative]="player.totalScore < 0" [class.positive]="player.totalScore > 0">
+        {{ player.totalScore }} pts
+      </td>
+      <td class="status-cell">
+        <span class="badge">Positives: {{ player.usedPositiveContractsCount }}/{{ gameService.maxPositivesPerPlayer() }}</span>
+      </td>
+    </tr>
+  }
+</tbody>
           </table>
         </div>
       </section>
@@ -110,5 +113,21 @@
       <button class="submit-btn" (click)="startNewGame()">Start New Match</button>
     </div>
   }
+
+
+  <!-- Confirmation Modal Popup -->
+@if (showResetModal) {
+  <div class="modal-backdrop" (click)="cancelReset()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <h3>Start New Game?</h3>
+      <p>Are you sure you want to quit? This will permanently delete your current active game session.</p>
+      
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="cancelReset()">Cancel</button>
+        <button class="btn-confirm" (click)="confirmNewGame()">Yes, Start New</button>
+      </div>
+    </div>
+  </div>
+}
 
 </div>
