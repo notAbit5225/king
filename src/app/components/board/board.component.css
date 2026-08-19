@@ -6,14 +6,15 @@
 }
 
 .board-container {
-  width: 100vw;
+  width: 100%; /* Changed from 100vw to prevent horizontal overflow */
   min-height: 100vh;
   min-height: 100dvh;
   background-color: var(--bg-color, #0b1120);
   color: var(--text-main, #f8fafc);
-  padding: 1.5rem;
+  padding: 1rem;
   box-sizing: border-box;
-  overflow-y: auto;
+  overflow-y: auto; /* Enables vertical scrolling */
+  -webkit-overflow-scrolling: touch;
   font-family: system-ui, -apple-system, sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -308,16 +309,16 @@ select:focus, input:focus {
 /* Mobile Responsiveness */
 @media (max-width: 600px) {
   .board-container { 
-    padding: 8px; 
-    width: 100%; 
-    overflow-y: scroll; /* Ensures vertical scrolling works on all mobile browsers */
-    -webkit-overflow-scrolling: touch; /* Smooth inertia scrolling for iOS Safari */
+    padding: 12px;
+    height: auto;
+    min-height: 100dvh;
+    overflow-y: visible;
   }
   .board-layout { 
-    display: flex; 
-    flex-direction: column; 
-    width: 100%; 
-    padding-bottom: 2.5rem; /* Adds bottom breathing room so last card isn't cut off */
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-bottom: 3rem;
   }
   .card, .leaderboard-card, .entry-card, .matrix-card, .board-layout > div {
     width: 100%;
@@ -336,8 +337,11 @@ select:focus, input:focus {
 }
 
 html, body, .board-container {
-  max-width: 100%;
+  width: 100%;
+  height: auto;
+  min-height: 100%;
   overflow-x: hidden;
+  overflow-y: auto;
   box-sizing: border-box;
 }
 

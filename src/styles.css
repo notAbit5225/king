@@ -45,6 +45,12 @@ html.light-mode {
 html, body {
   margin: 0;
   padding: 0;
+  width: 100%;
+  min-height: 100%;
+  height: auto !important;
+  overflow-x: hidden;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
   background: var(--body-bg) !important;
   background-attachment: fixed !important;
   color: var(--text-main);

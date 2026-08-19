@@ -1,29 +1,26 @@
 
 
 .setup-container {
-  width: 100vw;
+  width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
-  background: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1rem;
+  padding: 12px;
   box-sizing: border-box;
   overflow-y: auto;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .setup-card {
   width: 100%;
-  max-width: 420px;
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
+  max-width: 380px; /* Kept compact so it fits nicely on Galaxy S23 */
+  background: var(--card-bg, #151e2e);
+  border: 1px solid var(--border-color, #1e293b);
   border-radius: 16px;
-  padding: 1.25rem 1.5rem;
-  box-shadow: 0 10px 25px -5px rgba(13, 148, 136, 0.18), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  padding: 1.25rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
   box-sizing: border-box;
-  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 .card-header {
   margin-bottom: 1rem;
@@ -118,19 +115,28 @@ input::placeholder {
 }
 
 /* 📱 MOBILE RESPONSIVE ENHANCEMENTS */
-@media (max-width: 600px) {
+@media (max-width: 480px) {
   .setup-container {
     padding: 1.25rem 0.75rem;
     align-items: flex-start; /* Allows smooth scrolling if needed on small phones */
   }
 
   .setup-card {
-    padding: 1.5rem 1.25rem;
+    padding: 1rem;
   }
 
   .card-header h2 {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
+    margin-bottom: 0.75rem;
   }
+
+  .setup-card input, 
+  .setup-card select,
+  .setup-card button {
+    padding: 0.65rem;
+    font-size: 0.9rem;
+  }
+
 
   .subtitle {
     font-size: 0.875rem;
