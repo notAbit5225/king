@@ -1,13 +1,13 @@
-<div class="board-container">
-  
-  @if (!gameService.isGameComplete()) {
-    <header class="top-bar">
-      <h2>King Scoreboard</h2>
-      <button class="reset-btn" (click)="openResetModal()">New Game</button>
-        <button (click)="gameService.toggleTheme()" class="theme-toggle-btn">
-  {{ gameService.theme() === 'dark' ? '☀️ Light' : '🌙 Dark' }}
-</button>
-    </header>
+<header class="top-bar">
+  <h2>King Scoreboard</h2>
+
+  <div class="top-actions">
+    <button class="reset-btn" (click)="openResetModal()">New Game</button>
+    <button (click)="gameService.toggleTheme()" class="theme-toggle-btn">
+      {{ gameService.theme() === 'dark' ? '☀️ Light' : '🌙 Dark' }}
+    </button>
+  </div>
+</header>
 
     <div class="board-layout">
       <!-- Left Panel: Score Matrix -->

@@ -24,6 +24,13 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
+  gap: 12px; /* Prevents title and buttons from crashing into each other */
+}
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Separates the two top-right buttons nicely */
 }
 
 .reset-btn, .action-btn {
@@ -298,9 +305,20 @@ select:focus, input:focus {
 }
 
 /* Mobile Responsiveness */
+/* Mobile Responsiveness */
 @media (max-width: 600px) {
-  .board-container { padding: 8px; width: 100%; }
-  .board-layout { display: flex; flex-direction: column; width: 100%; }
+  .board-container { 
+    padding: 8px; 
+    width: 100%; 
+    overflow-y: scroll; /* Ensures vertical scrolling works on all mobile browsers */
+    -webkit-overflow-scrolling: touch; /* Smooth inertia scrolling for iOS Safari */
+  }
+  .board-layout { 
+    display: flex; 
+    flex-direction: column; 
+    width: 100%; 
+    padding-bottom: 2.5rem; /* Adds bottom breathing room so last card isn't cut off */
+  }
   .card, .leaderboard-card, .entry-card, .matrix-card, .board-layout > div {
     width: 100%;
     max-width: 100%;
