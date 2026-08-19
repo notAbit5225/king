@@ -1,4 +1,7 @@
-<header class="top-bar">
+<div class="board-container">
+  
+  @if (!gameService.isGameComplete()) {
+   <header class="top-bar">
   <h2>King Scoreboard</h2>
 
   <div class="top-actions">
